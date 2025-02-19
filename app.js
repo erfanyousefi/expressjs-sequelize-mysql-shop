@@ -6,6 +6,7 @@ const {authRoutes} = require("./modules/auth/auth.routes");
 const {basketRoutes} = require("./modules/basket/basket.routes");
 const {paymentRoutes} = require("./modules/payment/payment.routes");
 const {orderRoutes} = require("./modules/order/order.routes");
+const {rbacRoutes} = require("./modules/RBAC/rbac.routes");
 config();
 async function main () {
     const app = express();
@@ -17,6 +18,7 @@ async function main () {
     app.use("/basket", basketRoutes);
     app.use("/payment", paymentRoutes);
     app.use("/order", orderRoutes);
+    app.use("/rbac", rbacRoutes);
     app.use((req, res, next) => {
         return res.status(404).json({
             message: "not found route"
