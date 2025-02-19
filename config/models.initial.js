@@ -3,6 +3,7 @@ const {Discount} = require("../modules/discount/discount.model");
 const {Order, OrderItems} = require("../modules/order/order.model");
 const {Payment} = require("../modules/payment/payment.model");
 const {Product, ProductDetail, ProductColor, ProductSize} = require("../modules/product/product.model");
+const {Role, RolePermission, Permission} = require("../modules/RBAC/rbac.model");
 const {RefreshToken} = require("../modules/user/refreshToken.model");
 const {User, Otp} = require("../modules/user/user.model");
 const sequelize = require("./sequelize.config");
@@ -35,10 +36,18 @@ async function initDatabase () {
     Order.hasMany(OrderItems, {foreignKey: "orderId", sourceKey: "id", as: "items"});
     User.hasMany(Order, {foreignKey: "userId", sourceKey: "id", as: "orders"});
     OrderItems.belongsTo(Order, {foreignKey: "orderId", targetKey: "id"});
+    OrderItems.belongsTo(Product, {foreignKey: "productId", targetKey: "id", as: "product"});
+    OrderItems.belongsTo(ProductColor, {foreignKey: "colorId", targetKey: "id", as: "color"});
+    OrderItems.belongsTo(ProductSize, {foreignKey: "sizeId", targetKey: "id", as: "size"});
 
-    Order.hasOne(Payment, {foreignKey: "orderId", as: "payment", sourceKey: "id"});
-    Payment.hasOne(Order, {foreignKey: "paymentId", as: "order", sourceKey: "id"});
+    User.hasMany(Payment, {foreignKey: "userId", sourceKey: "id", as: "payments"});
+    Order.hasOne(Payment, {foreignKey: "orderId", as: "payment", sourceKey: "id", onDelete: "CASCADE"});
+    Payment.hasOne(Order, {foreignKey: "paymentId", as: "order", sourceKey: "id", onDelete: "CASCADE"});
 
+    Role.hasMany(RolePermission, {foreignKey: "roleId", sourceKey: "id", as: "permissions"});
+    Permission.hasMany(RolePermission, {foreignKey: "permissionId", sourceKey: "id", as: "roles"});
+    RolePermission.belongsTo(Role, {foreignKey: "roleId", targetKey: "id"});
+    RolePermission.belongsTo(Permission, {foreignKey: "permissionId", targetKey: "id"});
     // RefreshToken.sync();
     // Discount.sync({});
     // Basket.sync({});
