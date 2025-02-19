@@ -1,6 +1,6 @@
 const OrderStatus = {
     Pending: "pending",
-    Ordered: "ordered",
+    // Ordered: "ordered",
     InProcess: "in-process",
     Packed: "packed",
     InTransit: "in-transit",
