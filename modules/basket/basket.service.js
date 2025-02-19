@@ -74,6 +74,7 @@ async function getUserBasketById (userId) {
             {model: ProductSize, as: "size"},
         ]
     });
+    if (basket?.length === 0) throw createHttpError(400, "your basket is empty");
     let totalAmount = 0;
     let totalDiscount = 0;
     let finalAmount = 0;
